@@ -1,0 +1,31 @@
+{
+  "name": "robinsonjs",
+  "description": "Re-implement robinson by Javascript",
+  "version": "0.1.0",
+  "contributor": [
+    {
+      "name": "Lee",
+      "email": "jessy1092@gmail.com"
+    }
+  ],
+  "scripts": {
+    "start": "node ./_public/index.js",
+    "prestart": "npm run build",
+    "build": "babel src --out-dir _public"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "babel": "^5.4.7"
+  },
+  "repository": [
+    {
+      "type": "git",
+      "url": "https://github.com/WebStudyTW/robinsonjs"
+    }
+  ],
+  "license": "MIT"
+}
