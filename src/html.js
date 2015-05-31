@@ -2,25 +2,25 @@
 import Node from './dom';
 
 class Parser {
-  constructor(pos, input) {
+  constructor (pos, input) {
     this.pos = pos;
     this.input = input;
   }
 
-  nextChar() {
+  nextChar () {
     return this.input[this.pos];
   }
 
-  eof() {
+  eof () {
     return this.pos >= this.input.length;
   }
 
-  startsWith(startStr) {
+  startsWith (startStr) {
     let tmpStr = this.input.substring(this.pos);
     return tmpStr.indexOf(startStr) === 0;
   }
 
-  consumeChar() {
+  consumeChar () {
     if (!this.eof()) {
       let tmpChar = this.input[this.pos];
       this.pos += 1;
@@ -29,7 +29,7 @@ class Parser {
     return '';
   }
 
-  consumeWhile(test) {
+  consumeWhile (test) {
     let tmpStr = '';
     while (!this.eof() && test(this.nextChar())) {
       tmpStr += this.consumeChar();
@@ -37,13 +37,13 @@ class Parser {
     return tmpStr;
   }
 
-  consumeWitespace() {
+  consumeWitespace () {
     return this.consumeWhile((tmpChar) => {
       return tmpChar === ' ' || tmpChar === '\n';
     });
   }
 
-  parseTagName() {
+  parseTagName () {
     return this.consumeWhile((tmpChar) => {
       if (tmpChar.match(/[a-zA-Z0-9]/g)) {
         return true;
@@ -52,7 +52,7 @@ class Parser {
     })
   }
 
-  parseNode() {
+  parseNode () {
     if (this.nextChar() === '<') {
       return this.parseElement();
     } else {
@@ -60,7 +60,7 @@ class Parser {
     }
   }
 
-  parseElement() {
+  parseElement () {
     console.assert(this.consumeChar() === '<', 'Start Parse Element Error.');
     let tagName = this.parseTagName();
     let attrs = this.parseAttributes();
@@ -77,16 +77,16 @@ class Parser {
     console.assert(this.consumeChar() === '>', endTagError);
     this.consumeWitespace();
 
-    return Node.getElementNode(tagName, attrs, children);
+    return Node.createElementNode(tagName, attrs, children);
   }
 
   parseText() {
-    return Node.getTextNode(this.consumeWhile((tmpChar) => {
+    return Node.createTextNode(this.consumeWhile((tmpChar) => {
       return tmpChar !== '<';
     }));
   }
 
-  parseAttributes() {
+  parseAttributes () {
     let attributes = {};
 
     while(true) {
@@ -100,14 +100,14 @@ class Parser {
     return attributes;
   }
 
-  parseAttr() {
+  parseAttr () {
     let name = this.parseTagName();
     console.assert(this.consumeChar() === '=', `Parse Attr ${name} No =`);
     let value = this.parseAttrValue();
     return {name, value};
   }
 
-  parseAttrValue() {
+  parseAttrValue () {
     let openQuote = this.consumeChar();
     let value = this.consumeWhile((tmpChar) => {
       return tmpChar !== openQuote;
@@ -116,7 +116,7 @@ class Parser {
     return value;
   }
 
-  parseNodes() {
+  parseNodes () {
     let nodes = [];
 
     while(true) {
@@ -128,17 +128,17 @@ class Parser {
     }
     return nodes;
   }
+}
 
-  static parse(source) {
-    let parser = new Parser(0, source);
-    let nodes = parser.parseNodes();
+function parse (source) {
+  let parser = new Parser(0, source);
+  let nodes = parser.parseNodes();
 
-    if (nodes.length == 1) {
-      return nodes;
-    } else {
-      return Node.getElementNode('html', {}, nodes);
-    }
+  if (nodes.length == 1) {
+    return nodes;
+  } else {
+    return Node.createElementNode('html', {}, nodes);
   }
 }
 
-export default Parser;
+export default {parse};
