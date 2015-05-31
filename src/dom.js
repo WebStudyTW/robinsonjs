@@ -22,4 +22,4 @@ class ElementData{
 
 
 
-export default {Node};
+export default Node;

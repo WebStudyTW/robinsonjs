@@ -1,8 +1,10 @@
 
+import Node from './dom';
+
 class Parser {
-  constructor() {
-    this.pos = 0;
-    this.input = '';
+  constructor(pos, input) {
+    this.pos = pos;
+    this.input = input;
   }
 
   nextChar() {
@@ -37,7 +39,7 @@ class Parser {
 
   consumeWitespace() {
     return this.consumeWhile((tmpChar) => {
-      return tmpChar === ' ';
+      return tmpChar === ' ' || tmpChar === '\n';
     });
   }
 
@@ -59,11 +61,83 @@ class Parser {
   }
 
   parseElement() {
+    console.assert(this.consumeChar() === '<', 'Start Parse Element Error.');
+    let tagName = this.parseTagName();
+    let attrs = this.parseAttributes();
+    console.assert(this.consumeChar() === '>', `Parse Tag ${tagName} Error`);
+    this.consumeWitespace();
 
+    let children = this.parseNodes();
+
+    this.consumeWitespace();
+    let endTagError = `Parse Tag ${tagName} End Error`;
+    console.assert(this.consumeChar() === '<', endTagError);
+    console.assert(this.consumeChar() === '/', endTagError);
+    console.assert(this.parseTagName() === tagName, endTagError);
+    console.assert(this.consumeChar() === '>', endTagError);
+    this.consumeWitespace();
+
+    return Node.getElementNode(tagName, attrs, children);
   }
 
   parseText() {
+    return Node.getTextNode(this.consumeWhile((tmpChar) => {
+      return tmpChar !== '<';
+    }));
+  }
 
+  parseAttributes() {
+    let attributes = {};
+
+    while(true) {
+      this.consumeWitespace();
+      if (this.nextChar() === '>') {
+        break;
+      }
+      let {name, value} = this.parseAttr();
+      attributes[name] = value;
+    }
+    return attributes;
+  }
+
+  parseAttr() {
+    let name = this.parseTagName();
+    console.assert(this.consumeChar() === '=', `Parse Attr ${name} No =`);
+    let value = this.parseAttrValue();
+    return {name, value};
+  }
+
+  parseAttrValue() {
+    let openQuote = this.consumeChar();
+    let value = this.consumeWhile((tmpChar) => {
+      return tmpChar !== openQuote;
+    });
+    console.assert(this.consumeChar() === openQuote, `Parse Attr value ${value} Error`);
+    return value;
+  }
+
+  parseNodes() {
+    let nodes = [];
+
+    while(true) {
+      this.consumeWitespace();
+      if (this.eof() || this.startsWith('</')) {
+        break;
+      }
+      nodes.push(this.parseNode());
+    }
+    return nodes;
+  }
+
+  static parse(source) {
+    let parser = new Parser(0, source);
+    let nodes = parser.parseNodes();
+
+    if (nodes.length == 1) {
+      return nodes;
+    } else {
+      return Node.getElementNode('html', {}, nodes);
+    }
   }
 }
 
