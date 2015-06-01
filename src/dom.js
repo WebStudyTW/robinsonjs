@@ -10,6 +10,21 @@ class ElementData {
     this.tagName = tagName;
     this.attributes = attributes;
   }
+
+  getId() {
+      return this.attributes['id'];
+  }
+
+  getClasses() {
+      var regex = /\s+/;
+      classList = this.attributes['class'].split(regex);
+      var classSet = new Set();
+      for (let classElement of classList) {
+          classSet.add(classElement);
+      }
+      return classSet;
+  }
+
 }
 
 function createTextNode (data){
