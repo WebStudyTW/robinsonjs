@@ -50,7 +50,7 @@ class HtmlParser extends Parser {
   parseAttributes () {
     let attributes = {};
 
-    while(true) {
+    while (true) {
       this.consumeWitespace();
       if (this.nextChar() === '>') {
         break;
@@ -80,7 +80,7 @@ class HtmlParser extends Parser {
   parseNodes () {
     let nodes = [];
 
-    while(true) {
+    while (true) {
       this.consumeWitespace();
       if (this.eof() || this.startsWith('</')) {
         break;
