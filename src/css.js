@@ -1,35 +1,42 @@
-
 import Parser from './parser';
 
-class Stylesheet {
-  constructor () {
-    this.rules = [];
-  }
+class CssParser extends from Parser{
+
 }
 
-class Rule {
-  constructor () {
-    this.selectors = [];
-    this.declarations = [];
-  }
+class Stylesheet{
+    constructor(rules){
+        this.rules = rules;
+    }
+}
+
+class Rule{
+    constructor(selectors, declarations){
+        this.selectors = selectors;
+        this.declarations = declarations;
+    }
 }
 
 class SimpleSelector {
-  constructor () {
-    this.tagName = '';
-    this.id = '';
-    this.class = [];
-  }
+    constructor(tagName, id, cssClass){
+        this.tagName = tagName;
+        this.id = id;
+        this.cssClass = cssClass;
+    }
 }
 
 class Declaration {
-  constructor () {
-    this.name = '';
-    this.value = '';
-  }
+    constructor(name, value){
+        this.name = name;
+        this.value = value;
+    }
 }
 
-class CssParser extends Parser {
+function parseSimpleSelector(selectorStr) {
+    let selector = new SimpleSelector(null, null, []);
+    for (let x  of selectorStr){
 
+    }
 }
 
+export default SimpleSelector;
