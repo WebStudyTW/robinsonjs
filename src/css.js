@@ -1,9 +1,5 @@
 import Parser from './parser';
 
-class CssParser extends from Parser{
-
-}
-
 class Stylesheet{
     constructor(rules){
         this.rules = rules;
@@ -12,7 +8,7 @@ class Stylesheet{
 
 class Rule{
     constructor(selectors, declarations){
-        this.selectors = selectors;
+        this.selectors = selectors; //List of Selector
         this.declarations = declarations;
     }
 }
@@ -39,4 +35,4 @@ function parseSimpleSelector(selectorStr) {
     }
 }
 
-export default SimpleSelector;
+export default {Stylesheet, Rule, SimpleSelector, Declaration};
