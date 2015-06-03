@@ -3,6 +3,9 @@ class Node {
     this.children =  children;
     this.nodeType = nodeType;
   }
+  getChildren(){
+      return this.children;
+  }
 }
 
 class ElementData {
@@ -15,7 +18,7 @@ class ElementData {
       return this.attributes['id'];
   }
 
-  getClasses() {
+  getClassSet() {
       var regex = /\s+/;
       classList = this.attributes['class'].split(regex);
       var classSet = new Set();

@@ -13,4 +13,10 @@ let testHTML = `
 
 let nodes = Parser.parse(testHTML);
 
+function getNode(){
+    return nodes;
+}
+
 console.log(JSON.stringify(nodes));
+
+export default {getNode};
